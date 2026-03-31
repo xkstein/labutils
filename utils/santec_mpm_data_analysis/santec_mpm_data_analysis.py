@@ -98,3 +98,16 @@ def read_mpm_file(path):
     stitched = stitch_sweeps(sweeps, sweep_ranges)
     
     return df.index.to_numpy(), stitched, sweeps, sweep_ranges
+
+if __name__ == '__main__':
+    import matplotlib.pyplot as plt
+    path = 'example.csv'
+    wl, stitch, sweeps, sweep_ranges = read_mpm_file(path)
+
+    for sweep, _range in zip(sweeps, sweep_ranges):
+        ln, = plt.plot(wl, sweep, label='range ' + ':'.join([str(r) for r in _range]), alpha=0.5, linestyle='--')
+        plt.fill_between(wl[[0, -1]], 2 * [_range[0]], 2 * [_range[1]], color=ln.get_color(), alpha=0.1)
+
+    plt.plot(wl, stitch, label='stitched')
+    plt.legend()
+    plt.show()
